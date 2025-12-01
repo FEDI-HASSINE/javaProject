@@ -3,56 +3,96 @@ package com.project.XmlCrud.Model;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "RapportDeTravailleType", propOrder = {
+        "cinAgent",
+        "cout",
+        "duree",
+        "description",
+        "image",
+        "interventionRef"
+})
 public class RapportDeTravaille {
 
-    @XmlElement(required = true)
-    private Integer CINAgent;
+    @XmlElement(name = "CINAgent", required = true)
+    private String cinAgent;
 
-    @XmlElement(required = true)
-    private Integer InterventionRef;
-
-    @XmlElement(required = true)
+    @XmlElement(name = "cout", required = true)
     private Integer cout;
 
-    @XmlElement(required = true)
-    private Integer Duree;
+    @XmlElement(name = "Duree", required = true)
+    private Integer duree;
 
-    @XmlElement(required = true)
+    @XmlElement(name = "description", required = true)
     private String description;
 
-    @XmlElement(required = true)
-    private String image;
+    @XmlElement(name = "image", required = true)
+    private byte[] image = new byte[0];
 
-    public RapportDeTravaille() {}
+    @XmlElement(name = "InterventionRef", required = true)
+    private Integer interventionRef;
 
-    public RapportDeTravaille(Integer CINAgent, Integer cout, Integer Duree, String description, String image , Integer InterventionRef) {
-        this.CINAgent = CINAgent;
-        this.cout = cout;
-        this.Duree = Duree;
-        this.description = description;
-        this.image = image;
-        this.InterventionRef = InterventionRef;
+    public RapportDeTravaille() {
+        // JAXB requirement
     }
 
-    // Getters et Setters
+    public RapportDeTravaille(String cinAgent, Integer cout, Integer duree,
+                              String description, byte[] image, Integer interventionRef) {
+        this.cinAgent = cinAgent;
+        this.cout = cout;
+        this.duree = duree;
+        this.description = description;
+        this.image = image == null ? new byte[0] : image;
+        this.interventionRef = interventionRef;
+    }
 
-    public Integer getInterventionRef() { return InterventionRef; }
-    public void setInterventionRef(Integer interventionRef) { this.InterventionRef = interventionRef; }
+    public String getCinAgent() {
+        return cinAgent;
+    }
 
-    public Integer getDuree() { return Duree; }
-    public void setDuree(Integer duree) { Duree = duree; }
+    public void setCinAgent(String cinAgent) {
+        this.cinAgent = cinAgent;
+    }
 
-    public Integer getCINAgent() { return CINAgent; }
-    public void setCINAgent(Integer CINAgent) { this.CINAgent = CINAgent; }
+    public Integer getCout() {
+        return cout;
+    }
 
-    public Integer getCout() { return cout; }
-    public void setCout(Integer cout) { this.cout = cout; }
+    public void setCout(Integer cout) {
+        this.cout = cout;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public Integer getDuree() {
+        return duree;
+    }
 
-    public String getImage() { return image; }
-    public void setImage(String image) { this.image = image; }
+    public void setDuree(Integer duree) {
+        this.duree = duree;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image == null ? new byte[0] : image;
+    }
+
+    public Integer getInterventionRef() {
+        return interventionRef;
+    }
+
+    public void setInterventionRef(Integer interventionRef) {
+        this.interventionRef = interventionRef;
+    }
 }

@@ -1,61 +1,104 @@
 package com.project.XmlCrud.Service;
 
+import com.project.XmlCrud.DTO.DemandeDTO;
 import com.project.XmlCrud.Model.Demande;
 import com.project.XmlCrud.Model.Municipalite;
-import jakarta.xml.bind.JAXBException;
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
 
+import java.time.LocalDate;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class DemandeService {
 
-    // CREATE
-    public void addDemande(Demande demande) throws JAXBException, SAXException {
+    private final CitoyenService citoyenService;
+
+    public DemandeService(CitoyenService citoyenService) {
+        this.citoyenService = citoyenService;
+    }
+
+    public Demande createDemande(DemandeDTO demandeDTO) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
-        municipalite.addDemande(demande);  // ajoute dans <Demandes>
+
+        String citoyenCin = demandeDTO.getCitoyenCin().trim();
+        boolean citoyenExiste = municipalite.getCitoyens().stream()
+            .anyMatch(c -> c.getCin().equals(citoyenCin));
+
+        if (!citoyenExiste) {
+            throw new IllegalArgumentException("Citoyen introuvable pour le CIN fourni");
+        }
+
+        int nextId = municipalite.getDemandes().stream()
+                .map(Demande::getIdentifiant)
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(0) + 1;
+
+        Demande demande = new Demande();
+        demande.setIdentifiant(nextId);
+        demande.setCitoyenRef(citoyenCin);
+        demande.setDateDeSoumission(LocalDate.now());
+        demande.setImage(decodeBase64OrEmpty(demandeDTO.getImageBase64()));
+        demande.setLocalisation(demandeDTO.getLocalisation());
+
+        municipalite.addDemande(demande);
+        XmlUtil.saveMunicipalite(municipalite);
+
+        return demande;
+    }
+
+    public List<Demande> getAllDemandes() {
+        return XmlUtil.loadMunicipalite().getDemandes();
+    }
+
+    public List<Demande> getDemandesForCitizen(String email) {
+        String trimmedEmail = email == null ? "" : email.trim();
+        var citoyen = citoyenService.getCitoyenByEmail(trimmedEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Citoyen introuvable pour l'utilisateur connecté"));
+
+        return XmlUtil.loadMunicipalite().getDemandes().stream()
+                .filter(d -> citoyen.getCin().equals(d.getCitoyenRef()))
+                .toList();
+    }
+
+    public Demande getDemandeById(Integer id) {
+        return XmlUtil.loadMunicipalite().getDemandes().stream()
+                .filter(d -> id.equals(d.getIdentifiant()))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Demande introuvable"));
+    }
+
+    public Demande getDemandeForCitizen(Integer id, String email) {
+        String trimmedEmail = email == null ? "" : email.trim();
+        var citoyen = citoyenService.getCitoyenByEmail(trimmedEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Citoyen introuvable pour l'utilisateur connecté"));
+
+        return XmlUtil.loadMunicipalite().getDemandes().stream()
+                .filter(d -> id.equals(d.getIdentifiant()) && citoyen.getCin().equals(d.getCitoyenRef()))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Demande introuvable"));
+    }
+
+    public void deleteDemande(Integer id) {
+        Municipalite municipalite = XmlUtil.loadMunicipalite();
+        if (!municipalite.removeDemandeById(id)) {
+            throw new NoSuchElementException("Demande introuvable");
+        }
         XmlUtil.saveMunicipalite(municipalite);
     }
 
-    // READ ALL
-    public List<Demande> getAllDemandes() throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        return municipalite.getDemandes();
-    }
-
-    // READ BY ID
-    public Demande getDemandeById(Integer id) throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        return municipalite.getDemandes()
-                .stream()
-                .filter(d -> d.getIdentifiant().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    // UPDATE
-    public boolean updateDemande(Demande updatedDemande) throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        for (int i = 0; i < municipalite.getDemandes().size(); i++) {
-            Demande d = municipalite.getDemandes().get(i);
-            if (d.getIdentifiant().equals(updatedDemande.getIdentifiant())) {
-                municipalite.getDemandes().set(i, updatedDemande);
-                XmlUtil.saveMunicipalite(municipalite);
-                return true;
-            }
+    private static byte[] decodeBase64OrEmpty(String value) {
+        if (value == null || value.isBlank()) {
+            return new byte[0];
         }
-        return false;
-    }
-
-    // DELETE
-    public boolean deleteDemande(Integer id) throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        boolean removed = municipalite.removeDemandeById(id);
-        if (removed) {
-            XmlUtil.saveMunicipalite(municipalite);
+        try {
+            return Base64.getDecoder().decode(value);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Image fournie n'est pas au format Base64 valide", ex);
         }
-        return removed;
     }
 }

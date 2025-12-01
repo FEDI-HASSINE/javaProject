@@ -14,6 +14,13 @@
       </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="EtatInterventionType">
+      <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="100"/>
+      </xs:restriction>
+  </xs:simpleType>
+
   <!-- Type de compte de base -->
   <xs:complexType name="AccountType">
       <xs:sequence>
@@ -72,7 +79,7 @@
           <xs:element name="identifiant" type="xs:integer"/>
           <xs:element name="citoyenRef" type="CINType"/> 
           <xs:element name="DateDeSoumission" type="xs:date"/>
-          <xs:element name="image" type="xs:string"/>
+          <xs:element name="image" type="xs:base64Binary"/>
           <xs:element name="localisation" type="xs:string"/>
       </xs:sequence>
   </xs:complexType>
@@ -91,7 +98,7 @@
           <xs:element name="cout" type="xs:integer"/>
           <xs:element name="Duree" type="xs:integer"/>
           <xs:element name="description" type="xs:string"/>
-          <xs:element name="image" type="xs:string"/>
+          <xs:element name="image" type="xs:base64Binary"/>
           <xs:element name="InterventionRef" type="xs:integer"/>
       </xs:sequence>
   </xs:complexType>
@@ -103,6 +110,9 @@
           <xs:element name="dateDebut" type="xs:date"/>
           <xs:element name="type" type="xs:string"/>
           <xs:element name="urgence" type="xs:integer"/>
+          <xs:element name="etat" type="EtatInterventionType" default="0"/>
+          <xs:element name="localisation" type="xs:string"/>
+          <xs:element name="image" type="xs:base64Binary"/>
           <xs:element name="CINAgent" type="CINType"/>
           <xs:element name="CINSecretaire" type="CINType"/>
       </xs:sequence>

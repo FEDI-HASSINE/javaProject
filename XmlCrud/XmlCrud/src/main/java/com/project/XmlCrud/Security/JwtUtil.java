@@ -2,6 +2,8 @@ package com.project.XmlCrud.Security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -14,6 +16,7 @@ import java.util.Map;
 public class JwtUtil {
 
     private final String SECRET_KEY = "mohamed1fedi2sof3jhgfdszetuhdrybgfr";
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
@@ -37,6 +40,7 @@ public class JwtUtil {
             getAllClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
+            LOGGER.warn("Invalid JWT token", e);
             return false;
         }
     }

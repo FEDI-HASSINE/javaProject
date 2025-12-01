@@ -1,18 +1,41 @@
 package com.project.XmlCrud.DTO;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 public class DemandeDTO {
 
-    private Integer citoyenRef;       // référence du citoyen
-    private String imageBase64;       // image reçue en Base64
-    private String localisation;      // localisation de la demande
+    @NotBlank(message = "La référence citoyen est obligatoire")
+    @Pattern(regexp = "\\d{8}", message = "La référence citoyen doit contenir 8 chiffres")
+    @JsonAlias({"citoyenCinRef", "citoyenRef"})
+    private String citoyenCin;
 
-    // Getters et Setters
-    public Integer getCitoyenRef() {
-        return citoyenRef;
+    @NotBlank(message = "La localisation est obligatoire")
+    @JsonAlias({"emplacement"})
+    private String localisation;
+
+    @JsonAlias({"photo", "image"})
+    private String imageBase64;
+
+    private String description;
+    private String etat;
+    private String municipaliteNom;
+
+    public String getCitoyenCin() {
+        return citoyenCin;
     }
 
-    public void setCitoyenRef(Integer citoyenRef) {
-        this.citoyenRef = citoyenRef;
+    public void setCitoyenCin(String citoyenCin) {
+        this.citoyenCin = citoyenCin;
+    }
+
+    public String getLocalisation() {
+        return localisation;
+    }
+
+    public void setLocalisation(String localisation) {
+        this.localisation = localisation;
     }
 
     public String getImageBase64() {
@@ -23,11 +46,27 @@ public class DemandeDTO {
         this.imageBase64 = imageBase64;
     }
 
-    public String getLocalisation() {
-        return localisation;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLocalisation(String localisation) {
-        this.localisation = localisation;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getEtat() {
+        return etat;
+    }
+
+    public void setEtat(String etat) {
+        this.etat = etat;
+    }
+
+    public String getMunicipaliteNom() {
+        return municipaliteNom;
+    }
+
+    public void setMunicipaliteNom(String municipaliteNom) {
+        this.municipaliteNom = municipaliteNom;
     }
 }

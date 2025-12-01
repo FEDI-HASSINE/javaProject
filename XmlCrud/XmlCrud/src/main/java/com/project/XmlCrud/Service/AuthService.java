@@ -1,13 +1,9 @@
 package com.project.XmlCrud.Service;
 
 import com.project.XmlCrud.Model.Account;
-import com.project.XmlCrud.Model.Citoyen;
-import com.project.XmlCrud.Model.Agent;
-import com.project.XmlCrud.Model.ChefGenerale;
-import com.project.XmlCrud.Model.Secretaire;
-import com.project.XmlCrud.Model.ChefInformatique;
 import com.project.XmlCrud.Security.JwtUtil;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
@@ -19,8 +15,6 @@ public class AuthService {
     private final ChefGeneraleService chefGeneraleService;
     private final SecretaireService secretaireService;
     private final ChefInformatiqueService chefInfoService;
-
-    
 
     public AuthService(JwtUtil jwtUtil,
                        CitoyenService citoyenService,
@@ -36,39 +30,48 @@ public class AuthService {
         this.chefInfoService = chefInfoService;
     }
 
-    // Authentifier un utilisateur (login)
     public String login(String email, String password) {
-    try {
-        Optional<? extends Account> user =
-            citoyenService.getAllCitoyens().stream()
-                .filter(c -> c.getEmail().equals(email))
-                .findFirst();
+        Account account = findAccountByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Email ou mot de passe incorrect"));
 
-        if(user.isEmpty()) 
-            user = agentService.getAllAgents().stream()
-                .filter(a -> a.getEmail().equals(email))
-                .findFirst();
-        if(user.isEmpty()) 
-            user = chefGeneraleService.getAllChefs().stream()
-                .filter(cg -> cg.getEmail().equals(email))
-                .findFirst();
-        if(user.isEmpty()) 
-            user = secretaireService.getAllSecretaires().stream()
-                .filter(s -> s.getEmail().equals(email))
-                .findFirst();
-        if(user.isEmpty()) 
-            user = chefInfoService.getAllChefs().stream()
-                .filter(ci -> ci.getEmail().equals(email))
-                .findFirst();
-
-        if(user.isPresent() && user.get().getPassword().equals(password)) {
-            return jwtUtil.generateToken(user.get().getEmail(), user.get().getRole());
+        if (!account.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Email ou mot de passe incorrect");
         }
 
-        throw new RuntimeException("Email ou mot de passe incorrect");
-
-    } catch (Exception e) { // JAXBException, SAXException, ou IOException
-        throw new RuntimeException("Erreur lors de la lecture des données XML", e);
+        return jwtUtil.generateToken(account.getEmail(), account.getRole());
     }
-}
+
+    private Optional<? extends Account> findAccountByEmail(String email) {
+        Optional<? extends Account> user = citoyenService.getAllCitoyens().stream()
+                .filter(c -> c.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+        if (user.isPresent()) {
+            return user;
+        }
+
+        user = agentService.getAllAgents().stream()
+                .filter(a -> a.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+        if (user.isPresent()) {
+            return user;
+        }
+
+        user = chefGeneraleService.getAllChefs().stream()
+                .filter(cg -> cg.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+        if (user.isPresent()) {
+            return user;
+        }
+
+        user = secretaireService.getAllSecretaires().stream()
+                .filter(s -> s.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+        if (user.isPresent()) {
+            return user;
+        }
+
+        return chefInfoService.getAllChefs().stream()
+                .filter(ci -> ci.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+    }
 }

@@ -2,46 +2,60 @@ package com.project.XmlCrud.Service;
 
 import com.project.XmlCrud.Model.Municipalite;
 import com.project.XmlCrud.Model.Secretaire;
-import jakarta.xml.bind.JAXBException;
-
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class SecretaireService {
 
-    // CREATE
-    public void addSecretaire(Secretaire secretaire) throws JAXBException, SAXException {
+    public Secretaire addSecretaire(Secretaire secretaire) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
-        municipalite.addSecretaire(secretaire);  // ajoute dans <Secretaires>
+
+        boolean exists = municipalite.getSecretaires().stream()
+                .anyMatch(existing -> existing.getCin().equals(secretaire.getCin())
+                        || existing.getEmail().equalsIgnoreCase(secretaire.getEmail()));
+        if (exists) {
+            throw new IllegalArgumentException("Secretaire avec ce CIN ou email existe déjà");
+        }
+
+        municipalite.addSecretaire(secretaire);
         XmlUtil.saveMunicipalite(municipalite);
+        return secretaire;
     }
 
-    // READ ALL
-    public List<Secretaire> getAllSecretaires() throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        return municipalite.getSecretaires();
+    public List<Secretaire> getAllSecretaires() {
+        return XmlUtil.loadMunicipalite().getSecretaires();
     }
 
-    // READ BY CIN
-    public Secretaire getSecretaireByCIN(Integer cin) throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        return municipalite.getSecretaires()
+    public Optional<Secretaire> getSecretaireByCIN(String cin) {
+        return XmlUtil.loadMunicipalite().getSecretaires()
                 .stream()
-                .filter(s -> s.getCIN().equals(cin))
-                .findFirst()
-                .orElse(null);
+                .filter(s -> s.getCin().equals(cin))
+                .findFirst();
     }
 
-    // UPDATE
-    public boolean updateSecretaire(Secretaire updatedSecretaire) throws JAXBException, SAXException {
+    public Optional<Secretaire> getSecretaireByEmail(String email) {
+        return XmlUtil.loadMunicipalite().getSecretaires()
+                .stream()
+                .filter(s -> s.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+    }
+
+    public boolean updateSecretaire(Secretaire updatedSecretaire) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
+
+        boolean emailTaken = municipalite.getSecretaires().stream()
+                .anyMatch(existing -> !existing.getCin().equals(updatedSecretaire.getCin())
+                        && existing.getEmail().equalsIgnoreCase(updatedSecretaire.getEmail()));
+        if (emailTaken) {
+            throw new IllegalArgumentException("Adresse email déjà utilisée par un autre secretaire");
+        }
 
         for (int i = 0; i < municipalite.getSecretaires().size(); i++) {
-            Secretaire s = municipalite.getSecretaires().get(i);
-
-            if (s.getCIN().equals(updatedSecretaire.getCIN())) {
+            Secretaire existing = municipalite.getSecretaires().get(i);
+            if (existing.getCin().equals(updatedSecretaire.getCin())) {
                 municipalite.getSecretaires().set(i, updatedSecretaire);
                 XmlUtil.saveMunicipalite(municipalite);
                 return true;
@@ -50,11 +64,10 @@ public class SecretaireService {
         return false;
     }
 
-    // DELETE
-    public boolean deleteSecretaire(Integer cin) throws JAXBException, SAXException {
+    public boolean deleteSecretaire(String cin) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
         boolean removed = municipalite.getSecretaires()
-                .removeIf(s -> s.getCIN().equals(cin));
+                .removeIf(s -> s.getCin().equals(cin));
         if (removed) {
             XmlUtil.saveMunicipalite(municipalite);
         }

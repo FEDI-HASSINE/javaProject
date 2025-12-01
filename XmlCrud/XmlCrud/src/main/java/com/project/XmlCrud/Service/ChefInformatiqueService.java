@@ -2,46 +2,37 @@ package com.project.XmlCrud.Service;
 
 import com.project.XmlCrud.Model.ChefInformatique;
 import com.project.XmlCrud.Model.Municipalite;
-import jakarta.xml.bind.JAXBException;
-
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
 
 import java.util.List;
+
 @Service
 public class ChefInformatiqueService {
 
-    // CREATE
-    public void addChefInformatique(ChefInformatique chef) throws JAXBException, SAXException {
+    public void addChefInformatique(ChefInformatique chef) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
-        municipalite.addChefInformatique(chef);  // ajoute dans <ChefsInformatiques>
+        municipalite.addChefInformatique(chef);
         XmlUtil.saveMunicipalite(municipalite);
     }
 
-    // READ ALL
-    public List<ChefInformatique> getAllChefs() throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        return municipalite.getChefsInformatiques();
+    public List<ChefInformatique> getAllChefs() {
+        return XmlUtil.loadMunicipalite().getChefsInformatiques();
     }
 
-    // READ BY CIN
-    public ChefInformatique getChefByCIN(Integer cin) throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        return municipalite.getChefsInformatiques()
+    public ChefInformatique getChefByCIN(String cin) {
+        return XmlUtil.loadMunicipalite().getChefsInformatiques()
                 .stream()
-                .filter(c -> c.getCIN().equals(cin))
+                .filter(c -> c.getCin().equals(cin))
                 .findFirst()
                 .orElse(null);
     }
 
-    // UPDATE
-    public boolean updateChef(ChefInformatique updatedChef) throws JAXBException, SAXException {
+    public boolean updateChef(ChefInformatique updatedChef) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
 
         for (int i = 0; i < municipalite.getChefsInformatiques().size(); i++) {
-            ChefInformatique c = municipalite.getChefsInformatiques().get(i);
-
-            if (c.getCIN().equals(updatedChef.getCIN())) {
+            ChefInformatique existing = municipalite.getChefsInformatiques().get(i);
+            if (existing.getCin().equals(updatedChef.getCin())) {
                 municipalite.getChefsInformatiques().set(i, updatedChef);
                 XmlUtil.saveMunicipalite(municipalite);
                 return true;
@@ -50,11 +41,10 @@ public class ChefInformatiqueService {
         return false;
     }
 
-    // DELETE
-    public boolean deleteChef(Integer cin) throws JAXBException, SAXException {
+    public boolean deleteChef(String cin) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
         boolean removed = municipalite.getChefsInformatiques()
-                .removeIf(c -> c.getCIN().equals(cin));
+                .removeIf(c -> c.getCin().equals(cin));
         if (removed) {
             XmlUtil.saveMunicipalite(municipalite);
         }

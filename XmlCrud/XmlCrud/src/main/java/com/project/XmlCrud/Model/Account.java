@@ -3,12 +3,22 @@ package com.project.XmlCrud.Model;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "AccountType", propOrder = {"cin", "email", "password", "nom", "prenom", "role"})
+@XmlSeeAlso({
+        Citoyen.class,
+        Agent.class,
+        Secretaire.class,
+        ChefGenerale.class,
+        ChefInformatique.class
+})
 public class Account {
 
-    @XmlElement(required = true)
-    private Integer CIN;
+    @XmlElement(name = "CIN", required = true)
+    private String cin;
 
     @XmlElement(required = true)
     private String email;
@@ -26,11 +36,11 @@ public class Account {
     private String role;
 
     public Account() {
-        
+        // JAXB requirement
     }
 
-    public Account(Integer CIN, String email, String password, String nom, String prenom, String role) {
-        this.CIN = CIN;
+    public Account(String cin, String email, String password, String nom, String prenom, String role) {
+        this.cin = cin;
         this.email = email;
         this.password = password;
         this.nom = nom;
@@ -38,24 +48,53 @@ public class Account {
         this.role = role;
     }
 
+    public String getCin() {
+        return cin;
+    }
 
-    public Integer getCIN() { return CIN; }
-    public void setCIN(Integer CIN) { this.CIN = CIN; }
+    public void setCin(String cin) {
+        this.cin = cin;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getPrenom() { return prenom; }
-    public void setPrenom(String prenom) { this.prenom = prenom; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
 
 

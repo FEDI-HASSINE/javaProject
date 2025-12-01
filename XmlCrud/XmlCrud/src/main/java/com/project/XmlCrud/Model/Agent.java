@@ -3,30 +3,42 @@ package com.project.XmlCrud.Model;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "AgentType", propOrder = {"disponibilite", "service"})
 public class Agent extends Account {
 
-    @XmlElement(required = true)
-    private boolean Disponibilite;
+    @XmlElement(name = "Disponibilite", required = true)
+    private boolean disponibilite;
 
-    @XmlElement(required = true)
+    @XmlElement(name = "service", required = true)
     private String service;
 
     public Agent() {
-        super();
+        // JAXB requirement
     }
 
-    public Agent(Integer CIN, String email, String password, String nom, String prenom, String role, boolean disponibilite, String service) {
-        super(CIN, email, password, nom, prenom, role);
-        this.Disponibilite = disponibilite;
+    public Agent(String cin, String email, String password, String nom, String prenom, String role,
+                 boolean disponibilite, String service) {
+        super(cin, email, password, nom, prenom, role);
+        this.disponibilite = disponibilite;
         this.service = service;
     }
 
-    // Getters et Setters
-    public boolean isDisponibilite() { return Disponibilite; }
-    public void setDisponibilite(boolean disponibilite) { Disponibilite = disponibilite; }
+    public boolean isDisponibilite() {
+        return disponibilite;
+    }
 
-    public String getService() { return service; }
-    public void setService(String service) { this.service = service; }
+    public void setDisponibilite(boolean disponibilite) {
+        this.disponibilite = disponibilite;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
 }

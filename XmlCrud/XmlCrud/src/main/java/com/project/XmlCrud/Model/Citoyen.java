@@ -3,32 +3,42 @@ package com.project.XmlCrud.Model;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "CitoyenType", propOrder = {"adresse", "rue"})
 public class Citoyen extends Account {
 
-    @XmlElement(required = true)
-    private String Adresse;
+    @XmlElement(name = "Adresse", required = true)
+    private String adresse;
 
-    @XmlElement(required = true)
-    private String Rue;
+    @XmlElement(name = "Rue", required = true)
+    private String rue;
 
-    
     public Citoyen() {
-        super();
+        // JAXB requirement
     }
 
-
-    public Citoyen(Integer CIN, String email, String password, String nom, String prenom, String role, String Adresse, String Rue) {
-        super(CIN, email, password, nom, prenom, role);
-        this.Adresse = Adresse;
-        this.Rue = Rue;
+    public Citoyen(String cin, String email, String password, String nom, String prenom, String role,
+                    String adresse, String rue) {
+        super(cin, email, password, nom, prenom, role);
+        this.adresse = adresse;
+        this.rue = rue;
     }
 
-    // Getters et Setters
-    public String getAdresse() { return Adresse; }
-    public void setAdresse(String adresse) { Adresse = adresse; }
+    public String getAdresse() {
+        return adresse;
+    }
 
-    public String getRue() { return Rue; }
-    public void setRue(String rue) { Rue = rue; }
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public String getRue() {
+        return rue;
+    }
+
+    public void setRue(String rue) {
+        this.rue = rue;
+    }
 }

@@ -2,46 +2,45 @@ package com.project.XmlCrud.Service;
 
 import com.project.XmlCrud.Model.Citoyen;
 import com.project.XmlCrud.Model.Municipalite;
-import jakarta.xml.bind.JAXBException;
-
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CitoyenService {
 
-    // CREATE
-    public void addCitoyen(Citoyen citoyen) throws JAXBException, SAXException {
+    public void addCitoyen(Citoyen citoyen) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
-        municipalite.addCitoyen(citoyen);  // ajoute dans <Citoyens>
+        municipalite.addCitoyen(citoyen);
         XmlUtil.saveMunicipalite(municipalite);
     }
 
-    // READ ALL
-    public List<Citoyen> getAllCitoyens() throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        return municipalite.getCitoyens();
+    public List<Citoyen> getAllCitoyens() {
+        return XmlUtil.loadMunicipalite().getCitoyens();
     }
 
-    // READ BY CIN
-    public Citoyen getCitoyenByCIN(Integer cin) throws JAXBException, SAXException {
-        Municipalite municipalite = XmlUtil.loadMunicipalite();
-        return municipalite.getCitoyens()
+    public Citoyen getCitoyenByCIN(String cin) {
+        return XmlUtil.loadMunicipalite().getCitoyens()
                 .stream()
-                .filter(c -> c.getCIN().equals(cin))
+                .filter(c -> c.getCin().equals(cin))
                 .findFirst()
                 .orElse(null);
     }
 
-    // UPDATE
-    public boolean updateCitoyen(Citoyen updatedCitoyen) throws JAXBException, SAXException {
+    public Optional<Citoyen> getCitoyenByEmail(String email) {
+        return XmlUtil.loadMunicipalite().getCitoyens()
+                .stream()
+                .filter(c -> c.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+    }
+
+    public boolean updateCitoyen(Citoyen updatedCitoyen) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
 
         for (int i = 0; i < municipalite.getCitoyens().size(); i++) {
-            Citoyen c = municipalite.getCitoyens().get(i);
-
-            if (c.getCIN().equals(updatedCitoyen.getCIN())) {
+            Citoyen existing = municipalite.getCitoyens().get(i);
+            if (existing.getCin().equals(updatedCitoyen.getCin())) {
                 municipalite.getCitoyens().set(i, updatedCitoyen);
                 XmlUtil.saveMunicipalite(municipalite);
                 return true;
@@ -50,10 +49,9 @@ public class CitoyenService {
         return false;
     }
 
-    // DELETE
-    public boolean deleteCitoyen(Integer cin) throws JAXBException, SAXException {
+    public boolean deleteCitoyen(String cin) {
         Municipalite municipalite = XmlUtil.loadMunicipalite();
-        boolean removed = municipalite.removeCitoyenByCIN(String.valueOf(cin));
+        boolean removed = municipalite.removeCitoyenByCin(cin);
         if (removed) {
             XmlUtil.saveMunicipalite(municipalite);
         }

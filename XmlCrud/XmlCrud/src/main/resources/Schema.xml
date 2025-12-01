@@ -11,32 +11,39 @@
             <Adresse>Rue de Tunis</Adresse>
             <Rue>Centre-ville</Rue>
         </Citoyen>
+        <Citoyen>
+            <CIN>98765432</CIN>
+            <email>nour.citizen@example.com</email>
+            <password>nourpass</password>
+            <nom>Nour</nom>
+            <prenom>Saadi</prenom>
+            <role>citoyen</role>
+            <Adresse>Rue Ibn Khaldoun</Adresse>
+            <Rue>El Menzah</Rue>
+        </Citoyen>
     </Citoyens>
-
     <Agents>
         <Agent>
             <CIN>11112222</CIN>
-            <email>agent1@example.com</email>
+            <email>agent1.maj@example.com</email>
             <password>agentpass</password>
             <nom>Ali</nom>
             <prenom>Hajri</prenom>
             <role>agent</role>
-            <Disponibilite>true</Disponibilite>
-            <service>Nettoyage</service>
+            <Disponibilite>false</Disponibilite>
+            <service>Propreté</service>
         </Agent>
     </Agents>
-
     <Secretaires>
         <Secretaire>
             <CIN>22223333</CIN>
-            <email>secretaire1@example.com</email>
-            <password>secretpass</password>
+            <email>secretaire.updated@example.com</email>
+            <password>secret456</password>
             <nom>Leila</nom>
             <prenom>Ghribi</prenom>
             <role>secretaire</role>
         </Secretaire>
     </Secretaires>
-
     <ChefsGeneraux>
         <ChefGenerale>
             <CIN>55556666</CIN>
@@ -47,7 +54,6 @@
             <role>chef</role>
         </ChefGenerale>
     </ChefsGeneraux>
-
     <ChefsInformatiques>
         <ChefInformatique>
             <CIN>66667777</CIN>
@@ -58,7 +64,6 @@
             <role>chefinfo</role>
         </ChefInformatique>
     </ChefsInformatiques>
-
     <Demandes>
         <Demande>
             <identifiant>1</identifiant>
@@ -74,8 +79,49 @@
             <image>iVBORw0KGgoAAAANSUhEUgAA</image>
             <localisation>Rue ABC, Ville XYZ</localisation>
         </Demande>
+        <Demande>
+            <identifiant>3</identifiant>
+            <citoyenRef>12345678</citoyenRef>
+            <DateDeSoumission>2025-12-01</DateDeSoumission>
+            <image>AA==</image>
+            <localisation>Rue Habib</localisation>
+        </Demande>
+        <Demande>
+            <identifiant>4</identifiant>
+            <citoyenRef>12345678</citoyenRef>
+            <DateDeSoumission>2025-12-01</DateDeSoumission>
+            <image>AA==</image>
+            <localisation>Rue 456</localisation>
+        </Demande>
+        <Demande>
+            <identifiant>5</identifiant>
+            <citoyenRef>12345678</citoyenRef>
+            <DateDeSoumission>2025-12-01</DateDeSoumission>
+            <image>AA==</image>
+            <localisation>Rue Habib</localisation>
+        </Demande>
+        <Demande>
+            <identifiant>6</identifiant>
+            <citoyenRef>12345678</citoyenRef>
+            <DateDeSoumission>2025-12-02</DateDeSoumission>
+            <image>iVBORw0KGgoAAAANSUhEUgAAAAoAAAAK</image>
+            <localisation>Avenue des Tests</localisation>
+        </Demande>
+        <Demande>
+            <identifiant>7</identifiant>
+            <citoyenRef>98765432</citoyenRef>
+            <DateDeSoumission>2025-12-03</DateDeSoumission>
+            <image>iVBORw0KGgoAAAANSUhEUgAAAA8AAAAP</image>
+            <localisation>Rue Ibn Khaldoun</localisation>
+        </Demande>
+        <Demande>
+            <identifiant>8</identifiant>
+            <citoyenRef>98765432</citoyenRef>
+            <DateDeSoumission>2025-12-04</DateDeSoumission>
+            <image>iVBORw0KGgoAAAANSUhEUgAAAA0AAAAN</image>
+            <localisation>Avenue du Lac</localisation>
+        </Demande>
     </Demandes>
-
     <Notifications>
         <Notification>
             <idN>1</idN>
@@ -83,7 +129,6 @@
             <contenue>Votre demande est acceptée</contenue>
         </Notification>
     </Notifications>
-
     <Interventions>
         <Intervention>
             <id>1</id>
@@ -91,11 +136,13 @@
             <dateDebut>2025-10-01</dateDebut>
             <type>Urgent</type>
             <urgence>3</urgence>
+            <etat>0</etat>
+            <localisation>Rue centrale</localisation>
+            <image>iVBORw0KGgoAAAANSUhEUgAAAAUA</image>
             <CINAgent>11112222</CINAgent>
             <CINSecretaire>22223333</CINSecretaire>
         </Intervention>
     </Interventions>
-
     <RapportsDeTravaille>
         <RapportDeTravaille>
             <CINAgent>11112222</CINAgent>
@@ -106,8 +153,6 @@
             <InterventionRef>1</InterventionRef>
         </RapportDeTravaille>
     </RapportsDeTravaille>
-
-
     <Equipements>
         <Equipement>
             <id>1</id>
@@ -115,7 +160,6 @@
             <disponible>true</disponible>
         </Equipement>
     </Equipements>
-
     <EquipementInterventions>
         <EquipementIntervention>
             <equipementRef>1</equipementRef>

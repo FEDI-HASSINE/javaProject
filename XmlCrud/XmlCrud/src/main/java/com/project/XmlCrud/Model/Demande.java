@@ -1,51 +1,91 @@
 package com.project.XmlCrud.Model;
 
+import com.project.XmlCrud.Model.adapter.LocalDateAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
-import java.util.Base64;
+import jakarta.xml.bind.annotation.XmlSchemaType;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.time.LocalDate;
 
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "DemandeType", propOrder = {
+        "identifiant",
+        "citoyenRef",
+        "dateDeSoumission",
+        "image",
+        "localisation"
+})
 public class Demande {
-    @XmlElement(required = true)
+
+    @XmlElement(name = "identifiant", required = true)
     private Integer identifiant;
 
-    @XmlElement(required = true)
-    private Integer citoyenRef;
+    @XmlElement(name = "citoyenRef", required = true)
+    private String citoyenRef;
 
-    @XmlElement(required = true)
-    private String DateDeSoumission;
+    @XmlElement(name = "DateDeSoumission", required = true)
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @XmlSchemaType(name = "date")
+    private LocalDate dateDeSoumission;
 
-    @XmlElement(required = true)
-    private String image;
+    @XmlElement(name = "image", required = true)
+    private byte[] image = new byte[0];
 
-    @XmlElement(required = true)
+    @XmlElement(name = "localisation", required = true)
     private String localisation;
 
-    public Demande() {}
+    public Demande() {
+        // JAXB requirement
+    }
 
-    public Demande(Integer identifiant,Integer citoyenRef, String dateDeSoumission, String image, String localisation) {
-        this.identifiant=identifiant;
+    public Demande(Integer identifiant, String citoyenRef, LocalDate dateDeSoumission, byte[] image, String localisation) {
+        this.identifiant = identifiant;
         this.citoyenRef = citoyenRef;
-        this.DateDeSoumission = dateDeSoumission;
-        this.image = image;
+        this.dateDeSoumission = dateDeSoumission;
+        this.image = image == null ? new byte[0] : image;
         this.localisation = localisation;
     }
 
-    // Getters et Setters
-    public Integer getIdentifiant() { return identifiant; }
-    public void setIdentifiant(Integer identifiant) { this.identifiant = identifiant; }
-    
-    public Integer getCitoyenRef() { return citoyenRef; }
-    public void setCitoyenRef(Integer citoyenRef) { this.citoyenRef = citoyenRef; }
+    public Integer getIdentifiant() {
+        return identifiant;
+    }
 
-    public String getDateDeSoumission() { return DateDeSoumission; }
-    public void setDateDeSoumission(String dateDeSoumission) { DateDeSoumission = dateDeSoumission; }
+    public void setIdentifiant(Integer identifiant) {
+        this.identifiant = identifiant;
+    }
 
-    public String getImage() { return image; }
-    public void setImage(String image) { this.image = image; }
+    public String getCitoyenRef() {
+        return citoyenRef;
+    }
 
-    public String getLocalisation() { return localisation; }
-    public void setLocalisation(String localisation) { this.localisation = localisation; }
+    public void setCitoyenRef(String citoyenRef) {
+        this.citoyenRef = citoyenRef;
+    }
+
+    public LocalDate getDateDeSoumission() {
+        return dateDeSoumission;
+    }
+
+    public void setDateDeSoumission(LocalDate dateDeSoumission) {
+        this.dateDeSoumission = dateDeSoumission;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image == null ? new byte[0] : image;
+    }
+
+    public String getLocalisation() {
+        return localisation;
+    }
+
+    public void setLocalisation(String localisation) {
+        this.localisation = localisation;
+    }
 }

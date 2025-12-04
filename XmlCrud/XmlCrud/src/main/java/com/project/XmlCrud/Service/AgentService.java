@@ -29,6 +29,17 @@ public class AgentService {
         return XmlUtil.loadMunicipalite().getAgents();
     }
 
+    public Optional<Agent> getAgentByEmail(String email) {
+        if (email == null) {
+            return Optional.empty();
+        }
+        String normalized = email.trim().toLowerCase();
+        return XmlUtil.loadMunicipalite().getAgents()
+                .stream()
+                .filter(a -> a.getEmail().equalsIgnoreCase(normalized))
+                .findFirst();
+    }
+
     public Optional<Agent> getAgentByCIN(String cin) {
         return XmlUtil.loadMunicipalite().getAgents()
                 .stream()

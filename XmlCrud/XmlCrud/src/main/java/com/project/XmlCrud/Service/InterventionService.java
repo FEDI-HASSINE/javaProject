@@ -6,6 +6,7 @@ import com.project.XmlCrud.Model.Demande;
 import com.project.XmlCrud.Model.Intervention;
 import com.project.XmlCrud.Model.Municipalite;
 import com.project.XmlCrud.Model.Secretaire;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
@@ -107,6 +108,26 @@ public class InterventionService {
             XmlUtil.saveMunicipalite(municipalite);
         }
         return removed;
+    }
+
+    public Intervention updateEtatByAgent(Integer interventionId, Integer etat, String agentEmail) {
+        Municipalite municipalite = XmlUtil.loadMunicipalite();
+
+        Agent agent = agentService.getAgentByEmail(normalizeEmail(agentEmail))
+                .orElseThrow(() -> new IllegalArgumentException("Agent introuvable pour l'utilisateur connecté"));
+
+        Intervention intervention = municipalite.getInterventions().stream()
+                .filter(i -> interventionId.equals(i.getId()))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Intervention introuvable"));
+
+        if (!agent.getCin().equals(intervention.getCinAgent())) {
+            throw new AccessDeniedException("Cet agent n'est pas affecté à l'intervention");
+        }
+
+        intervention.setEtat(etat == null ? 0 : etat);
+        XmlUtil.saveMunicipalite(municipalite);
+        return intervention;
     }
 
     private static String normalizeEmail(String email) {

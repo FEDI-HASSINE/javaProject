@@ -142,6 +142,18 @@
             <CINAgent>11112222</CINAgent>
             <CINSecretaire>22223333</CINSecretaire>
         </Intervention>
+        <Intervention>
+            <id>2</id>
+            <budget>800</budget>
+            <dateDebut>2025-11-01</dateDebut>
+            <type>Maintenance</type>
+            <urgence>4</urgence>
+            <etat>100</etat>
+            <localisation>Avenue du Lac</localisation>
+            <image>AA==</image>
+            <CINAgent>11112222</CINAgent>
+            <CINSecretaire>22223333</CINSecretaire>
+        </Intervention>
     </Interventions>
     <RapportsDeTravaille>
         <RapportDeTravaille>
@@ -151,6 +163,14 @@
             <description>Nettoyage du parc</description>
             <image>iVBORw0KGgoAAAANSUhEUgAAAAUA</image>
             <InterventionRef>1</InterventionRef>
+        </RapportDeTravaille>
+        <RapportDeTravaille>
+            <CINAgent>11112222</CINAgent>
+            <cout>120</cout>
+            <Duree>4</Duree>
+            <description>Remise en etat du feu tricolore, pieces changees</description>
+            <image></image>
+            <InterventionRef>2</InterventionRef>
         </RapportDeTravaille>
     </RapportsDeTravaille>
     <Equipements>
